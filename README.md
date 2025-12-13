@@ -5,7 +5,6 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-yellow)](https://github.com/MockThePlank/browserPlanks)
 [![License](https://img.shields.io/github/license/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/blob/main/LICENSE)
 
-
 Kleine, framework-freie Präsentations-App mit animierten Übergängen, 5 Beispiel-Slides und drei Transition-Typen.
 
 ## Start

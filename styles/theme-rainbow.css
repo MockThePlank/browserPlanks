@@ -1,0 +1,12 @@
+:root.theme-rainbow {
+  --bg: #12001f;
+  --text: #fdf4ff;
+  --accent: #ff7de9;
+  --accent-strong: #ffc857;
+  color-scheme: dark;
+}
+body.theme-rainbow-body {
+  background: radial-gradient(120% 120% at 20% 20%, #2a0a3f, #12001f 60%),
+    radial-gradient(140% 140% at 80% 80%, #0f2c4f, #12001f 50%);
+  font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+}

@@ -21,7 +21,7 @@ Kleine, framework-freie Präsentations-App mit animierten Übergängen, 5 Beispi
   - `SlideRenderer` rendert Templates (Text, Tabelle, Video).
   - `TransitionManager` wendet Transition-Klassen an (`fade`, `slide`, `zoom`) und räumt alte Slides auf.
   - `Deck` kümmert sich um Routing (Hash), Navigation und Fokus/ARIA.
-- `styles.css`: Layout (16:9 Bühne), Templates, Transition-Styles.
+- `styles/styles.css`: Layout (16:9 Bühne), Templates, Transition-Styles.
 
 ## Bilder einbinden
 
@@ -71,11 +71,11 @@ Reihenfolge: `slides/index.js` exportiert ein Array (`export const slides = [int
 
 1) Lege in `SlideRenderer.templates` eine neue Render-Funktion an, z. B. `quote: (el, slide) => { ... }`.  
 2) Weise `type: "quote"` im entsprechenden Slide-Objekt zu.  
-3) Ergänze (optional) Styles in `styles.css` für den neuen Typ.
+3) Ergänze (optional) Styles in `styles/styles.css` für den neuen Typ.
 
 ## Transitions erweitern
 
-- Neue CSS-Kombination in `styles.css` (Klassenmuster `t-<name>`, Zustände `is-entering`, `is-active`, `is-leaving`, `is-leaving-active`).
+- Neue CSS-Kombination in `styles/styles.css` (Klassenmuster `t-<name>`, Zustände `is-entering`, `is-active`, `is-leaving`, `is-leaving-active`).
 - Im Slide-Objekt `transition: { type: "<name>", duration, easing }` setzen. Ohne Angabe greift das Default (`fade`, 500 ms, ease-in-out).
 
 ## Barrierefreiheit & Verhalten

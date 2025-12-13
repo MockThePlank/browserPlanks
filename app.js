@@ -1,4 +1,4 @@
-import { slides } from "./slides/index.js";
+import { getPresentation } from "./presentations/index.js";
 
 const defaultTransition = {
   type: "fade",
@@ -258,8 +258,9 @@ class TransitionManager {
 }
 
 class Deck {
-  constructor(slides, { stageEl, slidesRootEl, indicatorEl }) {
-    this.slides = slides;
+  constructor(presentation, { stageEl, slidesRootEl, indicatorEl }) {
+    this.presentation = presentation;
+    this.slides = presentation.slides;
     this.stageEl = stageEl;
     this.slidesRootEl = slidesRootEl;
     this.indicatorEl = indicatorEl;
@@ -426,6 +427,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const indicatorEl = document.getElementById("slide-indicator");
   const baseWidth = 1200;
   const baseHeight = 675;
+  const params = new URLSearchParams(window.location.search);
+  const presentationId = params.get("deck") || params.get("presentation") || "default";
+  const presentation = getPresentation(presentationId);
 
   if (!stageEl || !slidesRootEl) {
     console.error("Stage oder Slides-Root fehlt in der Seite.");
@@ -443,7 +447,25 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", updateUiScale);
   window.addEventListener("orientationchange", updateUiScale);
 
-  const deck = new Deck(slides, { stageEl, slidesRootEl, indicatorEl });
+  applyTheme(presentation.theme);
+  const deck = new Deck(presentation, { stageEl, slidesRootEl, indicatorEl });
   deck.init();
   updateUiScale();
 });
+
+function applyTheme(theme = {}) {
+  const root = document.documentElement;
+  const body = document.body;
+  if (theme.className) root.classList.add(theme.className);
+  if (theme.bodyClassName) body.classList.add(theme.bodyClassName);
+  const stylesheets = Array.isArray(theme.stylesheets) ? theme.stylesheets : [];
+  stylesheets.forEach((href) => {
+    if (!href) return;
+    if (document.head.querySelector(`link[data-theme-href="${href}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.dataset.themeHref = href;
+    document.head.appendChild(link);
+  });
+}

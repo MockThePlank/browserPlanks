@@ -10,13 +10,13 @@ Kurzer Leitfaden, wie dieses Deck aufgebaut ist und erweitert werden sollte.
   - `SlideRenderer`: Renderfunktionen für `text`, `table`, `video`, `image`. Neue Slide-Typen hier ergänzen.
   - `TransitionManager`: Wendet CSS-Transition-Klassen an (`fade`, `slide`, `zoom`) und räumt alte Slides weg.
   - `Deck`: Steuert Routing (Hash `#/n`), Navigation (Keyboard/Click/Buttons), Fokus/ARIA, Medien-Pause.
-- **Styles**: `styles.css` enthält Theme, Bühne (16:9, dynamisch passend zu Viewport), Template-Styles und Transition-Klassen (`t-<name>`).
+- **Styles**: `styles/styles.css` enthält Theme, Bühne (16:9, dynamisch passend zu Viewport), Template-Styles und Transition-Klassen (`t-<name>`).
 
 ## Wie man Slides ergänzt
 
 1. Neue Datei unter `slides/` anlegen und ein Objekt `export default {...}` definieren (Felder: `id`, `type`, `title`, `subtitle`, `body`, `table`, `video`, `transition`).
 2. In `slides/index.js` importieren und ins `slides`-Array einfügen, Reihenfolge = Reihenfolge der Navigation.
-3. Falls neuer Typ: Renderfunktion in `SlideRenderer.templates` ergänzen und ggf. Styles in `styles.css`.
+3. Falls neuer Typ: Renderfunktion in `SlideRenderer.templates` ergänzen und ggf. Styles in `styles/styles.css`.
 
 ### Bilder einbinden
 

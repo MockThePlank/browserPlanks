@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Planks</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">MockThePlank Deck</div>
+        <div class="hints">←/→ oder Buttons, #/1 für direkte Folien</div>
+      </header>
+      <main class="main">
+        <div
+          id="stage"
+          class="stage"
+          tabindex="0"
+          role="region"
+          aria-live="polite"
+          aria-label="Slide 1"
+        >
+          <div id="slides-root" class="slides-root"></div>
+          <button class="nav-btn prev" type="button" aria-label="Vorherige Folie">
+            ◀
+          </button>
+          <button class="nav-btn next" type="button" aria-label="Nächste Folie">
+            ▶
+          </button>
+        </div>
+      </main>
+      <footer class="footer">
+        <span id="slide-indicator">Slide 1 / 1</span>
+        <span class="legend">Fokus mit Tab oder F</span>
+      </footer>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

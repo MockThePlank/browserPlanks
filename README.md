@@ -1,6 +1,12 @@
 # Browser Planks - Slide Demo
 
-Kleine, framework-freie Präsentations-App mit animierten Übergängen (ähnlich PowerPoint), 5 Beispiel-Slides und drei Transition-Typen.
+[![Pages](https://img.shields.io/badge/Pages-live-brightgreen)](https://MockThePlank.github.io/browserPlanks/)
+[![Last commit](https://img.shields.io/github/last-commit/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/commits/main)
+[![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-yellow)](https://github.com/MockThePlank/browserPlanks)
+[![License](https://img.shields.io/github/license/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/blob/main/LICENSE)
+
+
+Kleine, framework-freie Präsentations-App mit animierten Übergängen, 5 Beispiel-Slides und drei Transition-Typen.
 
 ## Start
 

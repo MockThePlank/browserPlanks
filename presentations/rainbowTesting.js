@@ -9,6 +9,11 @@ const textSlideOverrides = [
     subtitle: "From gut feeling to clear color signals",
     body:
       "Rainbow Testing maps risks and maturity to colors. You immediately see what is burning and what is stable.",
+    image: {
+      src: "assets/images/rainbow02.png",
+      alt: "Rainbow Testing overview",
+      caption: "The Rainbow Testing model",
+    },  
   },
   {
     title: "Red – acute risks",
@@ -32,6 +37,11 @@ const textSlideOverrides = [
     subtitle: "Maintain, don't neglect",
     body:
       "Green signals reliably tested areas. Keep them that way: avoid regressions and refactor regularly.",
+    image: {
+      src: "assets/images/rainbow03.png",
+      alt: "Rainbow Testing green zone",
+      caption: "Healthy test coverage in the green zone",
+    },
   },
   {
     title: "Blue – experiments",

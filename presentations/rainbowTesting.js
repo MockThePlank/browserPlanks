@@ -48,6 +48,11 @@ const textSlideOverrides = [
     subtitle: "Validate quickly",
     body:
       "New features start in blue: fast feedback loops with feature flags, canaries, and targeted test paths.",
+    image: {
+      src: "assets/images/rainbow04.png",
+      alt: "Rainbow Testing blue zone",
+      caption: "Innovate safely in the blue zone",
+    },  
   },
 ];
 

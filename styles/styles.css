@@ -185,13 +185,6 @@ body {
   align-content: start;
 }
 
-.slide.slide-type-finale {
-  display: grid;
-  place-items: center;
-  grid-template-rows: 1fr;
-  text-align: center;
-}
-
 .slide.is-active {
   opacity: 1;
   pointer-events: auto;

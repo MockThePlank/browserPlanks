@@ -1,8 +1,7 @@
+import { createIntroSlide } from "./templates.js";
 import type { TextSlide } from "../types.js";
 
-const intro: TextSlide = {
-  id: "intro",
-  type: "text",
+const intro: TextSlide = createIntroSlide({
   title: "Rainbow Testing",
   subtitle: "🌈 it's all about colors",
   body:
@@ -17,7 +16,6 @@ const intro: TextSlide = {
     alt: "Rainbow Testing Intro Image",
     caption: "Embrace the colors of testing",
   },
-  transition: { type: "fade", duration: 550, easing: "ease-out" },
-};
+});
 
 export default intro;

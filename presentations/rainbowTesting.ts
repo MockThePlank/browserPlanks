@@ -1,6 +1,4 @@
-import intro from "../slides/intro.js";
-import slide01 from "../slides/slide01.js";
-import outro from "../slides/outro.js";
+import { createIntroSlide, createOutroSlide, createTextSlide } from "../slides/templates.js";
 import type { Presentation, TextSlide } from "../types.js";
 
 // Fünf Text-Slides auf Basis von slide01, jeweils mit anpassbarem Inhalt.
@@ -57,12 +55,42 @@ const textSlideOverrides: Array<Partial<TextSlide>> = [
   },
 ];
 
-const textSlides: TextSlide[] = textSlideOverrides.map((slideConfig, index) => ({
-  ...(slide01 as TextSlide),
-  ...slideConfig,
-  id: slideConfig.id || `rainbow-text-${index + 1}`,
-  type: "text",
-}));
+const intro = createIntroSlide({
+  id: "rainbow-intro",
+  title: "Rainbow Testing",
+  subtitle: "🌈 it's all about colors",
+  body:
+    "Welcome to the world of Rainbow Testing,\n" +
+    "a colorful journey through testing methodologies.\n" +
+    "In this presentation, we'll explore various testing strategies, tools,\n" +
+    "and best practices to ensure your applications are robust and reliable.\n" +
+    "\n" +
+    "Let's dive in and add some color to your testing approach!",
+  image: {
+    src: "assets/images/rainbow01.png",
+    alt: "Rainbow Testing Intro Image",
+    caption: "Embrace the colors of testing",
+  },
+});
+
+const textSlides: TextSlide[] = textSlideOverrides.map((slideConfig, index) =>
+  createTextSlide({
+    ...slideConfig,
+    id: slideConfig.id || `rainbow-text-${index + 1}`,
+  })
+);
+
+const outro = createOutroSlide({
+  id: "rainbow-outro",
+  title: "🌈  End 🌈",
+  subtitle: "of show",
+  body: "Thank you for joining this colorful journey through Rainbow Testing!",
+  image: {
+    src: "assets/images/rainbow03.png",
+    alt: "Rainbow Testing Outro Image",
+    caption: "See you in the rainbow",
+  },
+});
 
 export const rainbowPresentation: Presentation = {
   id: "rainbow",

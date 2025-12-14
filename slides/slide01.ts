@@ -1,8 +1,8 @@
+import { createTextSlide } from "./templates.js";
 import type { TextSlide } from "../types.js";
 
-const slide01: TextSlide = {
+const slide01: TextSlide = createTextSlide({
   id: "slide01",
-  type: "text",
   title: "what?",
   subtitle: "about Culture and Philosophy of Testing",
   body:
@@ -15,6 +15,6 @@ const slide01: TextSlide = {
     "By fostering a culture that prioritizes quality and encourages open communication about testing strategies\n" +
     "and outcomes, organizations can enhance their software's reliability, user satisfaction, and overall success.",
   transition: { type: "slide", duration: 500, easing: "ease-in-out" },
-};
+});
 
 export default slide01;

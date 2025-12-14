@@ -1,8 +1,8 @@
+import { createOutroSlide } from "./templates.js";
 import type { TextSlide } from "../types.js";
 
-const outro: TextSlide = {
+const outro: TextSlide = createOutroSlide({
   id: "outro",
-  type: "text",
   title: "🌈  End 🌈",
   subtitle: "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0of show",
   body: "Thank you for joining this colorful journey through Rainbow Testing!",
@@ -10,7 +10,6 @@ const outro: TextSlide = {
     src: "assets/images/rainbowtest.png",
     alt: "Rainbow Testing Outro Image",
   },
-  transition: { type: "fade", duration: 500, easing: "ease-in" },
-};
+});
 
 export default outro;

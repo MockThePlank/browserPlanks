@@ -1,6 +1,4 @@
-import intro from "../slides/intro.js";
-import slide01 from "../slides/slide01.js";
-import outro from "../slides/outro.js";
+import { createIntroSlide, createOutroSlide, createTextSlide } from "../slides/templates.js";
 import type { Presentation, TextSlide } from "../types.js";
 
 // 10 Text-Slides auf Basis von slide01, jeweils mit anpassbarem Inhalt.
@@ -96,12 +94,37 @@ const textSlideOverrides: Array<Partial<TextSlide>> = [
   },
 ];
 
-const textSlides: TextSlide[] = textSlideOverrides.map((slideConfig, index) => ({
-  ...(slide01 as TextSlide),
-  ...slideConfig,
-  id: slideConfig.id || `terminalAI-text-${index + 1}`,
-  type: "text",
-}));
+const intro = createIntroSlide({
+  id: "terminalAI-intro",
+  title: "Terminal AI",
+  subtitle: "Bringing AI to your command line",
+  body:
+    "Terminal AI integrates advanced capabilities directly into your terminal, enhancing productivity and workflow.",
+  image: {
+    src: "assets/images/terminalAI01.png",
+    alt: "Terminal AI overview",
+    caption: "The Terminal AI concept",
+  },
+});
+
+const textSlides: TextSlide[] = textSlideOverrides.map((slideConfig, index) =>
+  createTextSlide({
+    ...slideConfig,
+    id: slideConfig.id || `terminalAI-text-${index + 1}`,
+  })
+);
+
+const outro = createOutroSlide({
+  id: "terminalAI-outro",
+  title: "Thanks for trying Terminal AI",
+  subtitle: "Ship faster from your shell",
+  body: "Stay tuned for more features and integrations. Happy coding!",
+  image: {
+    src: "assets/images/terminalAI06.png",
+    alt: "Terminal AI future",
+    caption: "The future of Terminal AI",
+  },
+});
 
 export const terminalAIPresentation: Presentation = {
   id: "terminalAI",

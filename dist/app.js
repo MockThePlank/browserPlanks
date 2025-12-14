@@ -11,26 +11,7 @@ class SlideRenderer {
             text: (el, slide, ctx) => {
                 const title = document.createElement("h1");
                 const renderTitle = slide.title || "Titel fehlt";
-                if (slide.id === "outro") {
-                    const rainbow = "🌈";
-                    const idx = renderTitle.lastIndexOf(rainbow);
-                    if (idx !== -1) {
-                        const before = renderTitle.slice(0, idx);
-                        const after = renderTitle.slice(idx + rainbow.length);
-                        title.textContent = "";
-                        title.append(before);
-                        const span = document.createElement("span");
-                        span.className = "rainbow-rotated";
-                        span.textContent = rainbow;
-                        title.append(span, after);
-                    }
-                    else {
-                        title.textContent = renderTitle;
-                    }
-                }
-                else {
-                    title.textContent = renderTitle;
-                }
+                title.textContent = renderTitle;
                 title.dataset.testid = `${ctx.baseTestId}-title`;
                 const subtitle = document.createElement("h2");
                 subtitle.textContent = slide.subtitle || "";
@@ -443,10 +424,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function applyTheme(theme = {}) {
     const root = document.documentElement;
     const body = document.body;
+    // Remove old theme classes to avoid overlaps.
+    Array.from(root.classList)
+        .filter((cls) => cls.startsWith("theme-"))
+        .forEach((cls) => root.classList.remove(cls));
     if (theme.className)
         root.classList.add(theme.className);
     if (theme.bodyClassName)
         body.classList.add(theme.bodyClassName);
+    root.dataset.theme = theme.className || "theme-default";
     const stylesheets = Array.isArray(theme.stylesheets) ? theme.stylesheets : [];
     stylesheets.forEach((href) => {
         if (!href)

@@ -1,7 +1,7 @@
 import { createVideoSlide } from "./templates.js";
 const slide02 = createVideoSlide({
     id: "slide02",
-    title: "Video-Demo",
+    title: "Transitions & media",
     video: {
         src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
         autoplay: false,
@@ -9,5 +9,6 @@ const slide02 = createVideoSlide({
         muted: false,
         poster: "https://interactive-examples.mdn.mozilla.net/media/examples/flower.jpg",
     },
+    subtitle: "Example video slide to show media support",
 });
 export default slide02;

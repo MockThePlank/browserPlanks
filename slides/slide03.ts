@@ -3,14 +3,15 @@ import type { TableSlide } from "../types.js";
 
 const slide03: TableSlide = createTableSlide({
   id: "slide03",
-  title: "Table Slide",
+  title: "Deck basics",
   table: {
-    columns: ["Punkt", "Owner", "Status"],
+    columns: ["Feature", "Where", "Status"],
     rows: [
-      ["Slides laden & navigieren", "Frontend", "done"],
-      ["Transitions smooth halten", "Design", "done"],
-      ["Neue Templates dokumentieren", "Tech Writing", "pending"],
-      ["Autoplay Video testen", "QA", "testing"],
+      ["Navigation (arrows, click, hash #/n)", "app.ts", "ready"],
+      ["Slide templates (text/table/video/image)", "slides/templates.ts", "ready"],
+      ["Deck routing via ?deck=<id>", "app.ts / presentations", "ready"],
+      ["Themes per presentation", "styles/banner.css + theme class", "ready"],
+      ["Data-testid hooks", "app.ts renderers", "ready"],
     ],
   },
 });

@@ -1,17 +1,13 @@
 import { createIntroSlide } from "./templates.js";
 const intro = createIntroSlide({
-    title: "Rainbow Testing",
-    subtitle: "🌈 it's all about colors",
-    body: "Welcome to the world of Rainbow Testing,\n" +
-        "a colorful journey through testing methodologies.\n" +
-        "In this presentation, we'll explore various testing strategies, tools,\n" +
-        "and best practices to ensure your applications are robust and reliable.\n" +
-        "\n" +
-        "Let's dive in and add some color to your testing approach!",
+    title: "Browser Planks",
+    subtitle: "Tiny vanilla JS slide deck",
+    body: "Welcome! Browser Planks is a lightweight, framework-free slide app.\n" +
+        "Use it as a starter: copy slide templates, plug in your content, and ship a deck in minutes.\n" +
+        "You'll see how to run, navigate, and theme your presentation in the following slides.",
     image: {
-        src: "assets/images/rainbow01.png",
-        alt: "Rainbow Testing Intro Image",
-        caption: "Embrace the colors of testing",
+        src: "assets/images/default/default02.png",
+        alt: "Default deck abstract gradient",
     },
 });
 export default intro;

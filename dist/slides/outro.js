@@ -1,12 +1,14 @@
 import { createOutroSlide } from "./templates.js";
 const outro = createOutroSlide({
     id: "outro",
-    title: "🌈  End 🌈",
-    subtitle: "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0of show",
-    body: "Thank you for joining this colorful journey through Rainbow Testing!",
+    title: "Build your own deck",
+    subtitle: "Pick slides, edit content, ship",
+    body: "Copy these slide templates, swap in your content, and set a theme.\n" +
+        "Register your deck in presentations/index.ts and load it via ?deck=<id>.\n" +
+        "Happy presenting!",
     image: {
-        src: "assets/images/rainbowtest.png",
-        alt: "Rainbow Testing Outro Image",
+        src: "assets/images/default/default03.png",
+        alt: "Default deck outro gradient",
     },
 });
 export default outro;

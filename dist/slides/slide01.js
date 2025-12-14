@@ -1,16 +1,15 @@
 import { createTextSlide } from "./templates.js";
 const slide01 = createTextSlide({
     id: "slide01",
-    title: "what?",
-    subtitle: "about Culture and Philosophy of Testing",
-    body: "Testing is not just a technical activity;\n" +
-        "it's a mindset that influences how we approach software development and quality assurance.\n" +
-        "Embracing a testing culture means valuing collaboration, continuous learning,\n " +
-        "and a proactive approach to identifying and addressing potential issues early in the development process.\n " +
-        "A strong testing philosophy encourages teams to view testing as an integral part of the development lifecycle,\n" +
-        "promoting practices such as test-driven development (TDD) and continuous integration/continuous deployment (CI/CD).\n" +
-        "By fostering a culture that prioritizes quality and encourages open communication about testing strategies\n" +
-        "and outcomes, organizations can enhance their software's reliability, user satisfaction, and overall success.",
+    title: "Run it locally",
+    subtitle: "Two quick options",
+    body: "1) Open index.html directly in your browser.\n" +
+        "2) Or run a local server: `python3 -m http.server 3000` and open http://localhost:3000.\n" +
+        "Switch decks via query param: `?deck=default`, `?deck=rainbow`, `?deck=terminalAI`.",
+    image: {
+        src: "assets/images/default/default01.png",
+        alt: "Default deck startup illustration",
+    },
     transition: { type: "slide", duration: 500, easing: "ease-in-out" },
 });
 export default slide01;

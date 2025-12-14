@@ -1,0 +1,117 @@
+/* Base banner styling for all slides; size/position shared. */
+:root {
+  --banner-inset: -18%;
+  --banner-height: clamp(150px, 24vh, 230px);
+  --banner-bg-size: 200% 200%;
+  --banner-bg-position: 50% 50%;
+  --banner-blur: 12px;
+  --banner-saturate: 120%;
+  --banner-opacity: 0.75;
+  --banner-blend: screen;
+  --banner-bg: conic-gradient(
+    from 90deg,
+    #ff6b6b,
+    #ffd166,
+    #6cf1d6,
+    #70a1ff,
+    #c27dff,
+    #ff6b6b
+  );
+  --banner-animation: banner-default 18s linear infinite;
+}
+
+:root.theme-default,
+:root[data-theme="theme-default"] {
+  --banner-bg: conic-gradient(
+    from 90deg,
+    #ff6b6b,
+    #ffd166,
+    #6cf1d6,
+    #70a1ff,
+    #c27dff,
+    #ff6b6b
+  );
+  --banner-animation: banner-default 18s linear infinite;
+}
+
+:root.theme-rainbow,
+:root[data-theme="theme-rainbow"] {
+  --banner-bg: linear-gradient(
+    90deg,
+    #ff3b30 0%,
+    #ff9500 14%,
+    #ffd60a 28%,
+    #34c759 42%,
+    #0bd3d3 56%,
+    #0a84ff 70%,
+    #7d5bed 84%,
+    #ff3b30 100%
+  );
+  --banner-animation: banner-rainbow 10s ease-in-out infinite alternate;
+  --banner-opacity: 0.8;
+  --banner-bg-size: 200% 100%;
+  --banner-bg-position: 0% 50%;
+  --muted: #4a4f5c;
+}
+
+:root.theme-terminalAI,
+:root[data-theme="theme-terminalAI"] {
+  --banner-bg: linear-gradient(135deg, #f8e7d2 0%, #ecd7bd 45%, #dec8ab 100%);
+  --banner-animation: banner-terminal 20s ease-in-out infinite alternate;
+  --banner-opacity: 0.72;
+  --banner-blur: 14px;
+}
+
+.slide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--banner-inset);
+  right: var(--banner-inset);
+  height: var(--banner-height);
+  background: var(--banner-bg);
+  background-size: var(--banner-bg-size);
+  background-position: var(--banner-bg-position);
+  filter: blur(var(--banner-blur)) saturate(var(--banner-saturate));
+  opacity: var(--banner-opacity);
+  mix-blend-mode: var(--banner-blend);
+  animation: var(--banner-animation);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes banner-default {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes banner-rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes banner-terminal {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}

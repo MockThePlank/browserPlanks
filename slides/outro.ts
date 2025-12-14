@@ -1,4 +1,6 @@
-export default {
+import type { TextSlide } from "../types.js";
+
+const outro: TextSlide = {
   id: "outro",
   type: "text",
   title: "🌈  End 🌈",
@@ -10,3 +12,5 @@ export default {
   },
   transition: { type: "fade", duration: 500, easing: "ease-in" },
 };
+
+export default outro;

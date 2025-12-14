@@ -1,4 +1,6 @@
-export default {
+import type { TextSlide } from "../types.js";
+
+const intro: TextSlide = {
   id: "intro",
   type: "text",
   title: "Rainbow Testing",
@@ -17,3 +19,5 @@ export default {
   },
   transition: { type: "fade", duration: 550, easing: "ease-out" },
 };
+
+export default intro;

@@ -1,6 +1,7 @@
 import { slides as defaultSlides } from "../slides/index.js";
+import type { Presentation } from "../types.js";
 
-export const defaultPresentation = {
+export const defaultPresentation: Presentation = {
   id: "default",
   name: "MockThePlank Default Deck",
   slides: defaultSlides,

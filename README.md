@@ -2,7 +2,7 @@
 
 [![Pages](https://img.shields.io/badge/Pages-live-brightgreen)](https://MockThePlank.github.io/browserPlanks/)
 [![Last commit](https://img.shields.io/github/last-commit/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/commits/main)
-[![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-yellow)](https://github.com/MockThePlank/browserPlanks)
+[![TypeScript](https://img.shields.io/badge/TypeScript-ESM%20strict-3178c6)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/github/license/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/blob/main/LICENSE)
 
 Kleine, framework-freie Präsentations-App mit animierten Übergängen, 5 Beispiel-Slides und drei Transition-Typen.
@@ -10,13 +10,14 @@ Kleine, framework-freie Präsentations-App mit animierten Übergängen, 5 Beispi
 ## Start
 
 - Öffne `index.html` direkt im Browser **oder** starte einen kleinen Server im Projektordner, z. B. `python3 -m http.server 3000` und rufe `http://localhost:3000` auf.
+- Bei Änderungen am Code `npm run build` ausführen; der Browser lädt die kompilierten ES-Module aus `dist/app.js`.
 - Navigation: `←/→`, `PageUp/PageDown`, Klick auf Bühne, Buttons oder Hash-Link `#/1`, `#/2`, …
 - Fokus: Bühne ist `tab`-fokussierbar; Taste `f` setzt den Fokus erneut.
 
 ## Architektur
 
-- `slides/`: eine Datei pro Slide (`intro.js`, `architecture.js`, …) plus `slides/index.js` zum Aggregieren.
-- `app.js`:
+- `slides/`: eine Datei pro Slide (`intro.ts`, `architecture.ts`, …) plus `slides/index.ts` zum Aggregieren.
+- `app.ts`:
   - `SlideRenderer` rendert Templates (Text, Tabelle, Video).
   - `TransitionManager` wendet Transition-Klassen an (`fade`, `slide`, `zoom`) und räumt alte Slides auf.
   - `Deck` kümmert sich um Routing (Hash), Navigation und Fokus/ARIA.

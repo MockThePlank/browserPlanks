@@ -1,9 +1,10 @@
 import intro from "../slides/intro.js";
 import slide01 from "../slides/slide01.js";
 import outro from "../slides/outro.js";
+import type { Presentation, TextSlide } from "../types.js";
 
 // Fünf Text-Slides auf Basis von slide01, jeweils mit anpassbarem Inhalt.
-const textSlideOverrides = [
+const textSlideOverrides: Array<Partial<TextSlide>> = [
   {
     title: "Why Rainbow Testing?",
     subtitle: "From gut feeling to clear color signals",
@@ -13,7 +14,7 @@ const textSlideOverrides = [
       src: "assets/images/rainbow02.png",
       alt: "Rainbow Testing overview",
       caption: "The Rainbow Testing model",
-    },  
+    },
   },
   {
     title: "Red – acute risks",
@@ -49,21 +50,21 @@ const textSlideOverrides = [
     body:
       "New features start in blue: fast feedback loops with feature flags, canaries, and targeted test paths.",
     image: {
-      src: "assets/images/rainbow04.png",
+      src: "assets/images/rainbow03.png",
       alt: "Rainbow Testing blue zone",
       caption: "Innovate safely in the blue zone",
-    },  
+    },
   },
 ];
 
-const textSlides = textSlideOverrides.map((slideConfig, index) => ({
-  ...slide01,
+const textSlides: TextSlide[] = textSlideOverrides.map((slideConfig, index) => ({
+  ...(slide01 as TextSlide),
   ...slideConfig,
   id: slideConfig.id || `rainbow-text-${index + 1}`,
   type: "text",
 }));
 
-export const rainbowPresentation = {
+export const rainbowPresentation: Presentation = {
   id: "rainbow",
   name: "Rainbow Testing",
   slides: [intro, ...textSlides, outro],

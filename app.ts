@@ -1,30 +1,37 @@
 import { getPresentation } from "./presentations/index.js";
+import type {
+  Direction,
+  ImageConfig,
+  Presentation,
+  Slide,
+  SlideTransition,
+  ThemeConfig,
+} from "./types.js";
 
-const defaultTransition = {
+type TemplateContext = {
+  index: number;
+  total: number;
+  baseTestId: string;
+};
+
+const defaultTransition: SlideTransition = {
   type: "fade",
   duration: 500,
   easing: "ease-in-out",
 };
 
-const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(Math.max(value, min), max);
 
 class SlideRenderer {
-  createSlide(slide, index, total) {
-    const el = document.createElement("section");
-    el.className = `slide slide-type-${slide.type || "text"}`;
-    el.dataset.slideId = slide.id || `slide-${index}`;
-    el.setAttribute(
-      "aria-label",
-      `Slide ${index + 1} von ${total}: ${slide.title ?? slide.type}`
-    );
-
-    const template = this.templates[slide.type] || this.templates.text;
-    template.call(this, el, slide);
-    return el;
-  }
-
-  templates = {
-    text: (el, slide) => {
+  templates: {
+    text: (el: HTMLElement, slide: Slide, ctx: TemplateContext) => void;
+    table: (el: HTMLElement, slide: Slide, ctx: TemplateContext) => void;
+    video: (el: HTMLElement, slide: Slide, ctx: TemplateContext) => void;
+    image: (el: HTMLElement, slide: Slide, ctx: TemplateContext) => void;
+    finale: (el: HTMLElement, slide: Slide, ctx: TemplateContext) => void;
+  } = {
+    text: (el, slide, ctx) => {
       const title = document.createElement("h1");
       const renderTitle = slide.title || "Titel fehlt";
       if (slide.id === "outro") {
@@ -45,33 +52,39 @@ class SlideRenderer {
       } else {
         title.textContent = renderTitle;
       }
+      title.dataset.testid = `${ctx.baseTestId}-title`;
       const subtitle = document.createElement("h2");
       subtitle.textContent = slide.subtitle || "";
+      subtitle.dataset.testid = `${ctx.baseTestId}-subtitle`;
       const body = document.createElement("p");
       body.className = "slide-body slide-content is-hidden";
       body.setAttribute("aria-hidden", "true");
       body.textContent =
         slide.body ||
         "Diese Text-Slide hat keinen Body. Ergänze 'body' im Slide-Objekt.";
+      body.dataset.testid = `${ctx.baseTestId}-body`;
 
       el.append(title, subtitle, body);
 
-      this.appendOptionalImage(el, slide);
+      this.appendOptionalImage(el, slide, ctx);
     },
-    table: (el, slide) => {
+    table: (el, slide, ctx) => {
       const heading = document.createElement("h1");
       heading.textContent = slide.title || "Tabelle";
+      heading.dataset.testid = `${ctx.baseTestId}-title`;
 
       const table = document.createElement("table");
       table.classList.add("slide-content", "is-hidden");
       table.setAttribute("aria-hidden", "true");
       table.setAttribute("role", "table");
+      table.dataset.testid = `${ctx.baseTestId}-table`;
 
       const columns = slide.table?.columns || [];
       const rows = slide.table?.rows || [];
 
       if (columns.length) {
         const thead = document.createElement("thead");
+        thead.dataset.testid = `${ctx.baseTestId}-table-head`;
         const headRow = document.createElement("tr");
         columns.forEach((col) => {
           const th = document.createElement("th");
@@ -84,11 +97,14 @@ class SlideRenderer {
       }
 
       const tbody = document.createElement("tbody");
-      rows.forEach((row) => {
+      tbody.dataset.testid = `${ctx.baseTestId}-table-body`;
+      rows.forEach((row, rowIdx) => {
         const tr = document.createElement("tr");
-        row.forEach((cell) => {
+        tr.dataset.testid = `${ctx.baseTestId}-row-${rowIdx + 1}`;
+        row.forEach((cell, cellIdx) => {
           const td = document.createElement("td");
           td.textContent = cell;
+          td.dataset.testid = `${ctx.baseTestId}-cell-${rowIdx + 1}-${cellIdx + 1}`;
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
@@ -107,21 +123,24 @@ class SlideRenderer {
 
       el.append(heading, table);
 
-      this.appendOptionalImage(el, slide);
+      this.appendOptionalImage(el, slide, ctx);
     },
-    video: (el, slide) => {
+    video: (el, slide, ctx) => {
       const heading = document.createElement("h1");
       heading.textContent = slide.title || "Video";
+      heading.dataset.testid = `${ctx.baseTestId}-title`;
 
       const wrapper = document.createElement("div");
       wrapper.className = "video-wrapper slide-content is-hidden";
       wrapper.setAttribute("aria-hidden", "true");
+      wrapper.dataset.testid = `${ctx.baseTestId}-video-wrapper`;
 
       if (!slide.video?.src) {
         const fallback = document.createElement("p");
         fallback.className = "muted";
         fallback.textContent =
           "Kein Video-URL hinterlegt. Setze 'video.src' in der Slide-Konfiguration.";
+        fallback.dataset.testid = `${ctx.baseTestId}-video-fallback`;
         wrapper.appendChild(fallback);
         el.append(heading, wrapper);
         return;
@@ -135,41 +154,87 @@ class SlideRenderer {
       video.autoplay = slide.video.autoplay ?? false;
       video.muted = slide.video.muted ?? false;
       video.poster = slide.video.poster ?? "";
+      video.dataset.testid = `${ctx.baseTestId}-video`;
 
       wrapper.appendChild(video);
       el.append(heading, wrapper);
     },
-    image: (el, slide) => {
+    image: (el, slide, ctx) => {
       const heading = document.createElement("h1");
       heading.textContent = slide.title || "Bild";
+      heading.dataset.testid = `${ctx.baseTestId}-title`;
       const subtitle = document.createElement("h2");
       subtitle.textContent = slide.subtitle || "";
+      subtitle.dataset.testid = `${ctx.baseTestId}-subtitle`;
 
-      const wrapper = this.createImageWrapper(slide.image, { overlay: false, hidden: false });
+      const wrapper = this.createImageWrapper(slide.image ?? {}, ctx.baseTestId, {
+        overlay: false,
+        hidden: false,
+      });
+      wrapper.dataset.testid = `${ctx.baseTestId}-image-wrapper`;
       el.append(heading, subtitle, wrapper);
     },
-    finale: (el, slide) => {
+    finale: (el, slide, ctx) => {
       el.classList.add("rainbow-finale");
       const heading = document.createElement("h1");
       heading.textContent = slide.title || "Finale";
+      heading.dataset.testid = `${ctx.baseTestId}-title`;
       const subtitle = document.createElement("h2");
       subtitle.textContent = slide.subtitle || "";
+      subtitle.dataset.testid = `${ctx.baseTestId}-subtitle`;
       el.append(heading, subtitle);
     },
   };
 
-  appendOptionalImage(el, slide) {
+  createSlide(slide: Slide, index: number, total: number): HTMLElement {
+    const el = document.createElement("section");
+    const templateKey = (slide.type ?? "text") as keyof typeof this.templates;
+    el.className = `slide slide-type-${slide.type || "text"}`;
+    el.dataset.slideId = slide.id || `slide-${index}`;
+    const ctx: TemplateContext = {
+      index,
+      total,
+      baseTestId: this.buildTestId(slide, index),
+    };
+    el.dataset.testid = `${ctx.baseTestId}-root`;
+    el.setAttribute(
+      "aria-label",
+      `Slide ${index + 1} von ${total}: ${slide.title ?? slide.type ?? "Slide"}`
+    );
+
+    const template = this.templates[templateKey] || this.templates.text;
+    template.call(this, el, slide, ctx);
+    return el;
+  }
+
+  private buildTestId(slide: Slide, index: number): string {
+    const baseId = slide.id || `slide-${index + 1}`;
+    return `slide-${baseId}`;
+  }
+
+  appendOptionalImage(el: HTMLElement, slide: Slide, ctx: TemplateContext): void {
     if (!slide.image?.src) return;
-    const wrapper = this.createImageWrapper(slide.image, { overlay: true, hidden: false });
+    const wrapper = this.createImageWrapper(slide.image, ctx.baseTestId, {
+      overlay: true,
+      hidden: false,
+    });
+    wrapper.dataset.testid = `${ctx.baseTestId}-image-wrapper`;
     el.append(wrapper);
   }
 
-  createImageWrapper(imageConfig = {}, { overlay = true, hidden = true } = {}) {
+  createImageWrapper(
+    imageConfig: Partial<ImageConfig> = {},
+    baseTestId?: string,
+    { overlay = true, hidden = true }: { overlay?: boolean; hidden?: boolean } = {}
+  ): HTMLDivElement {
     const wrapper = document.createElement("div");
     wrapper.className = `image-wrapper${overlay ? " image-overlay" : ""} slide-content`;
     if (hidden) {
       wrapper.classList.add("is-hidden");
       wrapper.setAttribute("aria-hidden", "true");
+    }
+    if (baseTestId) {
+      wrapper.dataset.testid = `${baseTestId}-image-wrapper`;
     }
 
     const src = imageConfig.src;
@@ -180,12 +245,18 @@ class SlideRenderer {
     img.alt = imageConfig.alt || "Bild";
     img.loading = "lazy";
     img.decoding = "async";
+    if (baseTestId) {
+      img.dataset.testid = `${baseTestId}-image`;
+    }
     wrapper.appendChild(img);
 
     if (imageConfig.caption && !overlay) {
       const caption = document.createElement("p");
       caption.className = "image-caption";
       caption.textContent = imageConfig.caption;
+      if (baseTestId) {
+        caption.dataset.testid = `${baseTestId}-image-caption`;
+      }
       wrapper.appendChild(caption);
     }
 
@@ -194,12 +265,14 @@ class SlideRenderer {
 }
 
 class TransitionManager {
-  constructor(containerEl) {
+  private containerEl: HTMLElement;
+
+  constructor(containerEl: HTMLElement) {
     this.containerEl = containerEl;
   }
 
-  cleanupDangling(allowed = new Set()) {
-    this.containerEl.querySelectorAll(".slide").forEach((slide) => {
+  cleanupDangling(allowed: Set<HTMLElement> = new Set()): void {
+    this.containerEl.querySelectorAll<HTMLElement>(".slide").forEach((slide) => {
       if (allowed.has(slide)) return;
       if (
         slide.classList.contains("is-active") ||
@@ -211,13 +284,13 @@ class TransitionManager {
     });
   }
 
-  apply(oldEl, newEl, options) {
-    this.cleanupDangling(new Set([oldEl]));
+  apply(oldEl: HTMLElement | null, newEl: HTMLElement, options?: SlideTransition): Promise<void> {
+    this.cleanupDangling(new Set(oldEl ? [oldEl] : []));
 
-    const type = options?.type || defaultTransition.type;
-    const duration = options?.duration ?? defaultTransition.duration;
-    const easing = options?.easing || defaultTransition.easing;
-    const direction = options?.direction || "forward";
+    const type = options?.type ?? defaultTransition.type ?? "fade";
+    const duration = options?.duration ?? defaultTransition.duration ?? 500;
+    const easing = options?.easing ?? defaultTransition.easing ?? "ease-in-out";
+    const direction: Direction = options?.direction || "forward";
 
     newEl.style.setProperty("--t-duration", `${duration}ms`);
     newEl.style.setProperty("--t-easing", easing);
@@ -257,22 +330,35 @@ class TransitionManager {
   }
 }
 
+type DeckElements = {
+  stageEl: HTMLElement;
+  slidesRootEl: HTMLElement;
+  indicatorEl: HTMLElement | null;
+};
+
 class Deck {
-  constructor(presentation, { stageEl, slidesRootEl, indicatorEl }) {
+  private presentation: Presentation;
+  private slides: Slide[];
+  private stageEl: HTMLElement;
+  private slidesRootEl: HTMLElement;
+  private indicatorEl: HTMLElement | null;
+  private renderer = new SlideRenderer();
+  private transitioner: TransitionManager;
+  private currentIndex = -1;
+  private isRoutingFromHash = false;
+  private isTransitioning = false;
+  private queuedIndex: number | null = null;
+
+  constructor(presentation: Presentation, { stageEl, slidesRootEl, indicatorEl }: DeckElements) {
     this.presentation = presentation;
     this.slides = presentation.slides;
     this.stageEl = stageEl;
     this.slidesRootEl = slidesRootEl;
     this.indicatorEl = indicatorEl;
-    this.renderer = new SlideRenderer();
     this.transitioner = new TransitionManager(slidesRootEl);
-    this.currentIndex = -1;
-    this.isRoutingFromHash = false;
-    this.isTransitioning = false;
-    this.queuedIndex = null;
   }
 
-  init() {
+  init(): void {
     this.bindEvents();
     const initialIndex = this.indexFromHash();
     const hasHash = Boolean(window.location.hash);
@@ -280,19 +366,20 @@ class Deck {
     this.stageEl.focus();
   }
 
-  bindEvents() {
+  bindEvents(): void {
     document.querySelector(".nav-btn.prev")?.addEventListener("click", () => this.prev());
     document.querySelector(".nav-btn.next")?.addEventListener("click", () => this.next());
     this.stageEl.addEventListener("click", (event) => {
-      if (!(event.target instanceof HTMLElement)) return;
-      if (event.target.closest("button, video, a, input, textarea")) return;
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (target.closest("button, video, a, input, textarea")) return;
       if (this.revealHiddenContent()) return;
       this.next();
     });
 
     window.addEventListener("keydown", (event) => {
       const activeTag = document.activeElement?.tagName?.toLowerCase();
-      if (["input", "textarea", "select"].includes(activeTag)) return;
+      if (["input", "textarea", "select"].includes(activeTag ?? "")) return;
 
       if (["ArrowRight", "PageDown"].includes(event.key)) {
         event.preventDefault();
@@ -319,20 +406,23 @@ class Deck {
     });
   }
 
-  indexFromHash() {
+  indexFromHash(): number {
     const match = window.location.hash.match(/#\/(\d+)/);
     if (!match) return 0;
     const parsed = Number.parseInt(match[1], 10) - 1;
     return clamp(parsed, 0, this.slides.length - 1);
   }
 
-  updateHash() {
+  updateHash(): void {
     this.isRoutingFromHash = true;
     window.location.hash = `#/${this.currentIndex + 1}`;
     setTimeout(() => (this.isRoutingFromHash = false), 0);
   }
 
-  async goTo(targetIndex, { direction, fromHash = false } = {}) {
+  async goTo(
+    targetIndex: number,
+    { direction, fromHash = false }: { direction?: Direction; fromHash?: boolean } = {}
+  ): Promise<void> {
     const clampedIndex = clamp(targetIndex, 0, this.slides.length - 1);
     const isFirstRender = this.currentIndex === -1;
     if (clampedIndex === this.currentIndex && !isFirstRender) return;
@@ -343,7 +433,7 @@ class Deck {
     }
     this.isTransitioning = true;
 
-    const newDirection =
+    const newDirection: Direction =
       direction ||
       (isFirstRender
         ? "forward"
@@ -358,10 +448,10 @@ class Deck {
       this.slides.length
     );
 
-    const currentEl = this.slidesRootEl.querySelector(".slide.is-active");
+    const currentEl = this.slidesRootEl.querySelector<HTMLElement>(".slide.is-active");
     this.pauseMedia(currentEl);
 
-    const transition = {
+    const transition: SlideTransition = {
       ...defaultTransition,
       ...(nextSlide.transition || {}),
       direction: newDirection,
@@ -372,7 +462,7 @@ class Deck {
     this.updateIndicator();
     this.stageEl.setAttribute(
       "aria-label",
-      `Slide ${clampedIndex + 1} von ${this.slides.length}: ${nextSlide.title}`
+      `Slide ${clampedIndex + 1} von ${this.slides.length}: ${nextSlide.title ?? nextSlide.type ?? ""}`
     );
 
     if (!fromHash && !this.isRoutingFromHash && this.currentIndex >= 0) {
@@ -389,33 +479,33 @@ class Deck {
     }
   }
 
-  next() {
+  next(): void {
     this.goTo(this.currentIndex + 1, { direction: "forward" });
   }
 
-  prev() {
+  prev(): void {
     this.goTo(this.currentIndex - 1, { direction: "backward" });
   }
 
-  revealHiddenContent() {
-    const activeSlide = this.slidesRootEl.querySelector(".slide.is-active");
+  revealHiddenContent(): boolean {
+    const activeSlide = this.slidesRootEl.querySelector<HTMLElement>(".slide.is-active");
     if (!activeSlide) return false;
-    const content = activeSlide.querySelector(".slide-content.is-hidden");
+    const content = activeSlide.querySelector<HTMLElement>(".slide-content.is-hidden");
     if (!content) return false;
     content.classList.remove("is-hidden");
     content.removeAttribute("aria-hidden");
     return true;
   }
 
-  pauseMedia(el) {
+  pauseMedia(el: HTMLElement | null): void {
     if (!el) return;
-    el.querySelectorAll("video").forEach((video) => {
+    el.querySelectorAll<HTMLVideoElement>("video").forEach((video) => {
       video.pause();
       video.currentTime = 0;
     });
   }
 
-  updateIndicator() {
+  updateIndicator(): void {
     const label = `Slide ${this.currentIndex + 1} / ${this.slides.length}`;
     if (this.indicatorEl) this.indicatorEl.textContent = label;
   }
@@ -431,7 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const presentationId = params.get("deck") || params.get("presentation") || "default";
   const presentation = getPresentation(presentationId);
 
-  if (!stageEl || !slidesRootEl) {
+  if (!(stageEl instanceof HTMLElement) || !(slidesRootEl instanceof HTMLElement)) {
     console.error("Stage oder Slides-Root fehlt in der Seite.");
     return;
   }
@@ -453,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateUiScale();
 });
 
-function applyTheme(theme = {}) {
+function applyTheme(theme: ThemeConfig = {}): void {
   const root = document.documentElement;
   const body = document.body;
   if (theme.className) root.classList.add(theme.className);

@@ -1,4 +1,6 @@
-export default {
+import type { VideoSlide } from "../types.js";
+
+const slide02: VideoSlide = {
   id: "slide02",
   type: "video",
   title: "Video-Demo",
@@ -11,3 +13,5 @@ export default {
   },
   transition: { type: "zoom", duration: 600, easing: "ease-out" },
 };
+
+export default slide02;

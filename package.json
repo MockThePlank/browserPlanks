@@ -1,0 +1,21 @@
+{
+  "name": "browserplanks",
+  "version": "1.0.0",
+  "description": "[![Pages](https://img.shields.io/badge/Pages-live-brightgreen)](https://MockThePlank.github.io/browserPlanks/) [![Last commit](https://img.shields.io/github/last-commit/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/commits/main) [![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-yellow)](https://github.com/MockThePlank/browserPlanks) [![License](https://img.shields.io/github/license/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/blob/main/LICENSE)",
+  "main": "dist/app.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-codebeard:MockThePlank/browserPlanks.git"
+  },
+  "keywords": ["Slides", "Presentation", "HTML", "CSS", "JavaScript"],
+  "author": "CodeBeard",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -5,59 +5,61 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-ESM%20strict-3178c6)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/github/license/MockThePlank/browserPlanks)](https://github.com/MockThePlank/browserPlanks/blob/main/LICENSE)
 
-Kleine, framework-freie Präsentations-App mit animierten Übergängen, 5 Beispiel-Slides und drei Transition-Typen.
+A small, framework-free presentation app with animated transitions, 5 sample slides, and three transition types.
 
-## Start
+## Getting started
 
-- Öffne `index.html` direkt im Browser **oder** starte einen kleinen Server im Projektordner, z. B. `python3 -m http.server 3000` und rufe `http://localhost:3000` auf.
-- Bei Änderungen am Code `npm run build` ausführen; der Browser lädt die kompilierten ES-Module aus `dist/app.js`.
-- Navigation: `←/→`, `PageUp/PageDown`, Klick auf Bühne, Buttons oder Hash-Link `#/1`, `#/2`, …
-- Fokus: Bühne ist `tab`-fokussierbar; Taste `f` setzt den Fokus erneut.
+- Open `index.html` directly in your browser **or** run a tiny server in the project root, e.g. `python3 -m http.server 3000` and go to `http://localhost:3000`.
+- After code changes run `npm run build`; the browser loads the compiled ES modules from `dist/app.js`.
+- Navigation: `←/→`, `PageUp/PageDown`, click on stage, buttons, or hash link `#/1`, `#/2`, …
+- Focus: the stage is `tab`-focusable; press `f` to refocus it.
+- Switch decks via query param: `?deck=default`, `?deck=rainbow`, `?deck=terminalAI`, or your own id.
 
-## Architektur
+## Architecture
 
-- `slides/`: eine Datei pro Slide (`intro.ts`, `architecture.ts`, …) plus `slides/index.ts` zum Aggregieren.
+- `slides/`: one file per slide (`intro.ts`, `architecture.ts`, …) plus `slides/index.ts` to aggregate.
 - `app.ts`:
-  - `SlideRenderer` rendert Templates (Text, Tabelle, Video).
-  - `TransitionManager` wendet Transition-Klassen an (`fade`, `slide`, `zoom`) und räumt alte Slides auf.
-  - `Deck` kümmert sich um Routing (Hash), Navigation und Fokus/ARIA.
-- `styles/styles.css`: Layout (16:9 Bühne), Templates, Transition-Styles.
+  - `SlideRenderer` renders templates (text, table, video).
+  - `TransitionManager` applies transition classes (`fade`, `slide`, `zoom`) and cleans up old slides.
+  - `Deck` handles routing (hash), navigation, and focus/ARIA.
+- `presentations/`: registers decks (`presentations/index.ts`) and defines their slide sequences/themes.
+- `styles/styles.css`: layout (16:9 stage), templates, transition styles.
 
-## Bilder einbinden
+## Adding images
 
-- Lege deine Grafiken unter `assets/images/` ab (z. B. `assets/images/logo.png`).
-- Du kannst Bilder in `text`- und `table`-Slides einbetten oder den Typ `image` nutzen.
+- Put your assets under `assets/images/` (e.g. `assets/images/logo.png`).
+- You can embed images in `text` and `table` slides or use the `image` type.
 
 ```js
-// Bild in einem Text-Slide
+// Image in a text slide
 export default {
   id: "pic-01",
   type: "text",
-  title: "Architektur",
-  subtitle: "Blockdiagramm",
-  body: "…",
+  title: "Architecture",
+  subtitle: "Block diagram",
+  body: "...",
   image: {
     src: "assets/images/arch.png",
-    alt: "Blockdiagramm der Architektur",
-    caption: "Beispielhafte Architekturübersicht",
+    alt: "Architecture block diagram",
+    caption: "Example architecture overview",
   },
   transition: { type: "fade", duration: 500 },
 };
 ```
 
-Titel/Untertitel sind sofort sichtbar, Bild + Caption werden beim ersten Klick angezeigt (wie Body/Table/Video).
+Title/subtitle show immediately; image + caption appear on first click (like body/table/video).
 
-## Slides anpassen
+## Editing slides
 
-Ein Slide ist eine eigene Datei unter `slides/` und exportiert ein Objekt:
+A slide is a dedicated file under `slides/` that exports an object:
 
 ```js
 export default {
   id: "optional-id",
   type: "text" | "table" | "video" | "image",
-  title: "Titel",
-  subtitle: "Untertitel",
-  body: "Textinhalt",
+  title: "Title",
+  subtitle: "Subtitle",
+  body: "Text content",
   table: { columns: [...], rows: [[...], ...] },
   video: { src, autoplay, controls, muted, poster },
   image: { src, alt, caption },
@@ -65,26 +67,26 @@ export default {
 };
 ```
 
-Reihenfolge: `slides/index.js` exportiert ein Array (`export const slides = [intro, ...]`); dort einfach neue Slides importieren/anfügen. Hash-Links nutzen 1-basierte Indizes (`#/3` = drittes Slide).
+Order: `slides/index.ts` exports an array (`export const slides = [intro, ...]`); import/append new slides there. Hash links use 1-based indices (`#/3` = third slide).
 
-## Neuen Slide-Typ hinzufügen
+## Adding a new slide type
 
-1) Lege in `SlideRenderer.templates` eine neue Render-Funktion an, z. B. `quote: (el, slide) => { ... }`.  
-2) Weise `type: "quote"` im entsprechenden Slide-Objekt zu.  
-3) Ergänze (optional) Styles in `styles/styles.css` für den neuen Typ.
+1) Add a render function to `SlideRenderer.templates`, e.g. `quote: (el, slide) => { ... }`.  
+2) Set `type: "quote"` in the slide object.  
+3) Add (optional) styles in `styles/styles.css` for the new type.
 
-## Transitions erweitern
+## Extending transitions
 
-- Neue CSS-Kombination in `styles/styles.css` (Klassenmuster `t-<name>`, Zustände `is-entering`, `is-active`, `is-leaving`, `is-leaving-active`).
-- Im Slide-Objekt `transition: { type: "<name>", duration, easing }` setzen. Ohne Angabe greift das Default (`fade`, 500 ms, ease-in-out).
+- Add a CSS combo in `styles/styles.css` (class pattern `t-<name>`, states `is-entering`, `is-active`, `is-leaving`, `is-leaving-active`).
+- In the slide object set `transition: { type: "<name>", duration, easing }`. Defaults: `fade`, 500 ms, ease-in-out.
 
-## Barrierefreiheit & Verhalten
+## Accessibility & behavior
 
-- Bühne hat `role="region"` und `aria-live="polite"`; Titel wird pro Slide aktualisiert.
-- Buttons haben aussagekräftige Labels; Fokus sichtbar.
-- Keyboard vollständig bedienbar; Video stoppt beim Slide-Wechsel.
+- Stage has `role="region"` and `aria-live="polite"`; title updates per slide.
+- Buttons have meaningful labels; focus is visible.
+- Fully keyboard-operable; video stops on slide change.
 
-## Bekannte Grenzen
+## Known limitations
 
-- Keine Persistenz von Video-Playhead beim Slide-Wechsel (bewusst: sauberer Reset).
-- Google-Font wird remote geladen; offline bitte lokal einbinden oder systemische Schrift nutzen.
+- No persistence of video playhead on slide change (intentional reset).
+- Google Font is loaded remotely; for offline use, embed locally or use a system font.

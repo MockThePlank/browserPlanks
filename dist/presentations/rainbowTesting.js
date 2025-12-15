@@ -67,10 +67,12 @@ const intro = createIntroSlide({
         alt: "Rainbow Testing Intro Image",
         caption: "Embrace the colors of testing",
     },
+    reveal: { body: "word" },
 });
 const textSlides = textSlideOverrides.map((slideConfig, index) => createTextSlide({
     ...slideConfig,
     id: slideConfig.id || `rainbow-text-${index + 1}`,
+    reveal: { body: "word" },
 }));
 const outro = createOutroSlide({
     id: "rainbow-outro",
@@ -82,6 +84,7 @@ const outro = createOutroSlide({
         alt: "Rainbow Testing Outro Image",
         caption: "See you in the rainbow",
     },
+    reveal: { body: "word" },
 });
 export const rainbowPresentation = {
     id: "rainbow",

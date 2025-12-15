@@ -80,6 +80,12 @@ Order: `slides/index.ts` exports an array (`export const slides = [intro, ...]`)
 - Add a CSS combo in `styles/styles.css` (class pattern `t-<name>`, states `is-entering`, `is-active`, `is-leaving`, `is-leaving-active`).
 - In the slide object set `transition: { type: "<name>", duration, easing }`. Defaults: `fade`, 500 ms, ease-in-out.
 
+## Reveal modes for text slides
+
+- For text slides you can control how title/subtitle/body appear: `reveal: { title: "instant"|"all"|"word"|"char", subtitle: "...", body: "..." }`.
+- `instant`: visible immediately; `all`: hidden until first click; `word` / `char`: reveals one token per click in order.
+- Applies per field, so title/subtitle/body can use different modes; defaults are title/subtitle instant, body all.
+
 ## Accessibility & behavior
 
 - Stage has `role="region"` and `aria-live="polite"`; title updates per slide.

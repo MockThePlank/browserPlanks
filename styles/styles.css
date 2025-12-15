@@ -232,6 +232,14 @@ p {
   display: none;
 }
 
+[data-reveal-mode="all"].is-hidden {
+  display: none;
+}
+
+.reveal-token.is-hidden {
+  display: none;
+}
+
 .muted {
   color: var(--muted);
 }

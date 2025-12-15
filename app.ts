@@ -3,6 +3,8 @@ import type {
   Direction,
   ImageConfig,
   Presentation,
+  RevealMode,
+  RevealSpeeds,
   Slide,
   SlideTransition,
   ThemeConfig,
@@ -32,20 +34,39 @@ class SlideRenderer {
     finale: (el: HTMLElement, slide: Slide, ctx: TemplateContext) => void;
   } = {
     text: (el, slide, ctx) => {
-      const title = document.createElement("h1");
-      const renderTitle = slide.title || "Titel fehlt";
-      title.textContent = renderTitle;
-      title.dataset.testid = `${ctx.baseTestId}-title`;
-      const subtitle = document.createElement("h2");
-      subtitle.textContent = slide.subtitle || "";
-      subtitle.dataset.testid = `${ctx.baseTestId}-subtitle`;
-      const body = document.createElement("p");
-      body.className = "slide-body slide-content is-hidden";
-      body.setAttribute("aria-hidden", "true");
-      body.textContent =
-        slide.body ||
-        "Diese Text-Slide hat keinen Body. Ergänze 'body' im Slide-Objekt.";
-      body.dataset.testid = `${ctx.baseTestId}-body`;
+      const revealConfig =
+        slide.type === "text" && (slide as any).reveal ? (slide as any).reveal : {};
+      const revealSpeeds: RevealSpeeds | undefined =
+        slide.type === "text" && (slide as any).revealSpeedMs ? (slide as any).revealSpeedMs : undefined;
+      const titleMode: RevealMode = revealConfig.title ?? "instant";
+      const subtitleMode: RevealMode = revealConfig.subtitle ?? "instant";
+      const bodyMode: RevealMode = revealConfig.body ?? "all";
+
+      const title = this.createRevealableText(
+        "h1",
+        slide.title || "Title missing",
+        titleMode,
+        `${ctx.baseTestId}-title`,
+        { speedMs: this.getRevealSpeed(revealSpeeds, "title") }
+      );
+      const subtitle = this.createRevealableText(
+        "h2",
+        slide.subtitle || "",
+        subtitleMode,
+        `${ctx.baseTestId}-subtitle`,
+        { speedMs: this.getRevealSpeed(revealSpeeds, "subtitle") }
+      );
+      const body = this.createRevealableText(
+        "p",
+        slide.body,
+        bodyMode,
+        `${ctx.baseTestId}-body`,
+        {
+          asSlideContent: true,
+          classNames: ["slide-body", "slide-content"],
+          speedMs: this.getRevealSpeed(revealSpeeds, "body"),
+        }
+      );
 
       el.append(title, subtitle, body);
 
@@ -195,6 +216,97 @@ class SlideRenderer {
     return `slide-${baseId}`;
   }
 
+  private createRevealableText(
+    tag: "h1" | "h2" | "p",
+    text: string | undefined,
+    mode: RevealMode,
+    testId: string,
+    options: { asSlideContent?: boolean; classNames?: string[]; speedMs?: number } = {}
+  ): HTMLElement {
+    const { asSlideContent = false, classNames = [], speedMs } = options;
+    const el = document.createElement(tag);
+    if (classNames.length) el.classList.add(...classNames);
+    el.dataset.testid = testId;
+
+    const fallbackText =
+      text ??
+      (tag === "p"
+        ? "This text slide has no body. Add 'body' to the slide object."
+        : "");
+
+    if (mode === "instant") {
+      el.textContent = fallbackText;
+      return el;
+    }
+
+    if (mode === "all") {
+      el.textContent = fallbackText;
+      if (asSlideContent) el.classList.add("slide-content");
+      el.classList.add("is-hidden");
+      el.setAttribute("aria-hidden", "true");
+      el.dataset.revealMode = "all";
+      if (speedMs) el.dataset.revealSpeedMs = String(speedMs);
+      return el;
+    }
+
+    el.dataset.revealMode = mode;
+    if (speedMs) el.dataset.revealSpeedMs = String(speedMs);
+    if (asSlideContent) el.classList.add("slide-content");
+    const tokens =
+      mode === "word" ? this.tokenizeWords(fallbackText) : this.tokenizeChars(fallbackText);
+
+    tokens.forEach((token) => {
+      if (token === "\n") {
+        el.append(document.createTextNode("\n"));
+        return;
+      }
+      if (/^\s+$/.test(token)) {
+        el.append(document.createTextNode(token));
+        return;
+      }
+      const span = document.createElement("span");
+      span.className = "reveal-token is-hidden";
+      span.setAttribute("aria-hidden", "true");
+      span.textContent = token;
+      el.append(span);
+      if (mode === "word") {
+        el.append(document.createTextNode(" "));
+      }
+    });
+
+    return el;
+  }
+
+  private getRevealSpeed(
+    speeds: RevealSpeeds | undefined,
+    key: "title" | "subtitle" | "body",
+    fallback = 220
+  ): number {
+    return speeds?.[key] ?? fallback;
+  }
+
+  private tokenizeWords(text: string): string[] {
+    const tokens: string[] = [];
+    let current = "";
+    for (const ch of text) {
+      if (/\s/.test(ch)) {
+        if (current) {
+          tokens.push(current);
+          current = "";
+        }
+        tokens.push(ch);
+      } else {
+        current += ch;
+      }
+    }
+    if (current) tokens.push(current);
+    return tokens;
+  }
+
+  private tokenizeChars(text: string): string[] {
+    return Array.from(text);
+  }
+
   appendOptionalImage(el: HTMLElement, slide: Slide, ctx: TemplateContext): void {
     if (!slide.image?.src) return;
     const wrapper = this.createImageWrapper(slide.image, ctx.baseTestId, {
@@ -331,6 +443,7 @@ class Deck {
   private isRoutingFromHash = false;
   private isTransitioning = false;
   private queuedIndex: number | null = null;
+  private revealIntervals = new Map<HTMLElement, number>();
 
   constructor(presentation: Presentation, { stageEl, slidesRootEl, indicatorEl }: DeckElements) {
     this.presentation = presentation;
@@ -406,6 +519,7 @@ class Deck {
     targetIndex: number,
     { direction, fromHash = false }: { direction?: Direction; fromHash?: boolean } = {}
   ): Promise<void> {
+    this.stopRevealIntervals();
     const clampedIndex = clamp(targetIndex, 0, this.slides.length - 1);
     const isFirstRender = this.currentIndex === -1;
     if (clampedIndex === this.currentIndex && !isFirstRender) return;
@@ -473,6 +587,40 @@ class Deck {
   revealHiddenContent(): boolean {
     const activeSlide = this.slidesRootEl.querySelector<HTMLElement>(".slide.is-active");
     if (!activeSlide) return false;
+    const revealables = Array.from(
+      activeSlide.querySelectorAll<HTMLElement>("[data-reveal-mode]")
+    );
+
+    for (const el of revealables) {
+      const mode = el.dataset.revealMode;
+      const speed = Number.parseInt(el.dataset.revealSpeedMs || "", 10) || 220;
+      if (mode === "all" && el.classList.contains("is-hidden")) {
+        el.classList.remove("is-hidden");
+        el.removeAttribute("aria-hidden");
+        return true;
+      }
+      if (mode === "word" || mode === "char") {
+        if (this.revealIntervals.has(el)) continue;
+        const token = el.querySelector<HTMLElement>(".reveal-token.is-hidden");
+        if (!token) continue;
+        token.classList.remove("is-hidden");
+        token.removeAttribute("aria-hidden");
+
+        const intervalId = window.setInterval(() => {
+          const nextToken = el.querySelector<HTMLElement>(".reveal-token.is-hidden");
+          if (!nextToken) {
+            clearInterval(intervalId);
+            this.revealIntervals.delete(el);
+            return;
+          }
+          nextToken.classList.remove("is-hidden");
+          nextToken.removeAttribute("aria-hidden");
+        }, speed);
+        this.revealIntervals.set(el, intervalId);
+        return true;
+      }
+    }
+
     const content = activeSlide.querySelector<HTMLElement>(".slide-content.is-hidden");
     if (!content) return false;
     content.classList.remove("is-hidden");
@@ -491,6 +639,11 @@ class Deck {
   updateIndicator(): void {
     const label = `Slide ${this.currentIndex + 1} / ${this.slides.length}`;
     if (this.indicatorEl) this.indicatorEl.textContent = label;
+  }
+
+  private stopRevealIntervals(): void {
+    this.revealIntervals.forEach((id) => clearInterval(id));
+    this.revealIntervals.clear();
   }
 }
 

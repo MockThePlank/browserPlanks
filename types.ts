@@ -36,10 +36,15 @@ export interface BaseSlide {
   };
 }
 
+export type RevealMode = "instant" | "all" | "word" | "char";
+export type RevealSpeeds = Partial<Record<"title" | "subtitle" | "body", number>>;
+
 export interface TextSlide extends BaseSlide {
   type?: "text";
   body?: string;
   image?: ImageConfig;
+  reveal?: Partial<Record<"title" | "subtitle" | "body", RevealMode>>;
+  revealSpeedMs?: RevealSpeeds;
 }
 
 export interface TableSlide extends BaseSlide {

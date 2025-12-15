@@ -92,10 +92,14 @@ const intro = createIntroSlide({
         alt: "Terminal AI overview",
         caption: "The Terminal AI concept",
     },
+    reveal: { body: "char" },
+    revealSpeedMs: { body: 75 },
 });
 const textSlides = textSlideOverrides.map((slideConfig, index) => createTextSlide({
     ...slideConfig,
     id: slideConfig.id || `terminalAI-text-${index + 1}`,
+    reveal: { body: "char" },
+    revealSpeedMs: { body: 75 },
 }));
 const outro = createOutroSlide({
     id: "terminalAI-outro",
@@ -107,6 +111,8 @@ const outro = createOutroSlide({
         alt: "Terminal AI future",
         caption: "The future of Terminal AI",
     },
+    reveal: { body: "char" },
+    revealSpeedMs: { body: 75 },
 });
 export const terminalAIPresentation = {
     id: "terminalAI",

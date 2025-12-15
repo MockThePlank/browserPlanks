@@ -8,7 +8,7 @@ const outro = createOutroSlide({
         "Happy presenting!",
     image: {
         src: "assets/images/default/default03.png",
-        alt: "Default deck outro gradient",
+        alt: "Presentation complete illustration",
     },
 });
 export default outro;

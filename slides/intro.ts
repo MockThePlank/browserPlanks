@@ -9,8 +9,8 @@ const intro: TextSlide = createIntroSlide({
     "Use it as a starter: copy slide templates, plug in your content, and ship a deck in minutes.\n" +
     "You'll see how to run, navigate, and theme your presentation in the following slides.",
   image: {
-    src: "assets/images/default/default02.png",
-    alt: "Default deck abstract gradient",
+    src: "assets/images/default/default01.png",
+    alt: "Browser Planks logo illustration",
   },
 });
 

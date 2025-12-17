@@ -9,6 +9,8 @@ const textSlideOverrides = [
             src: "assets/images/rainbow/rainbowIcon.png",
             alt: "Rainbow Testing overview",
             caption: "The Rainbow Testing model",
+            position: "bottom-right",
+            size: "lg"
         },
     },
     {
@@ -19,6 +21,7 @@ const textSlideOverrides = [
             src: "assets/images/rainbow/rainbowIconD.png",
             alt: "Rainbow Testing red zone",
             caption: "Address critical issues in the red zone",
+            size: "sm"
         },
     },
     {
@@ -29,6 +32,8 @@ const textSlideOverrides = [
             src: "assets/images/rainbow/rainbowUni.png",
             alt: "Rainbow Testing color coding",
             caption: "Quality zones in the Rainbow model",
+            position: "center",
+            size: "lg"
         },
     },
     {
@@ -66,6 +71,8 @@ const intro = createIntroSlide({
         src: "assets/images/rainbow/rainbowCldD.png",
         alt: "Rainbow Testing Intro Image",
         caption: "Embrace the colors of testing",
+        position: "bottom-right",
+        size: "lg"
     },
     reveal: { body: "word" },
 });

@@ -46,6 +46,29 @@ describe("SlideRenderer", () => {
     const wrapper = el.querySelector<HTMLElement>('[data-testid="slide-demo-image-wrapper"]');
     expect(wrapper).toBeTruthy();
     expect(wrapper?.classList.contains("image-overlay")).toBe(true);
+    expect(wrapper?.classList.contains("image-pos-bottom-left")).toBe(true);
+    expect(wrapper?.dataset.imagePosition).toBe("bottom-left");
+    expect(wrapper?.classList.contains("image-size-md")).toBe(true);
+    expect(wrapper?.dataset.imageSize).toBe("md");
+  });
+
+  it("applies custom image size and position classes", () => {
+    const renderer = new SlideRenderer();
+    const slide: Slide = {
+      id: "demo-large",
+      type: "text",
+      title: "Hello",
+      body: "Alpha Beta",
+      image: { src: "assets/images/foo.png", alt: "Foo", position: "bottom-right", size: "lg" },
+    };
+
+    const el = renderer.createSlide(slide, 0, 2);
+    const wrapper = el.querySelector<HTMLElement>('[data-testid="slide-demo-large-image-wrapper"]');
+    expect(wrapper?.classList.contains("image-overlay")).toBe(true);
+    expect(wrapper?.classList.contains("image-pos-bottom-right")).toBe(true);
+    expect(wrapper?.classList.contains("image-size-lg")).toBe(true);
+    expect(wrapper?.dataset.imagePosition).toBe("bottom-right");
+    expect(wrapper?.dataset.imageSize).toBe("lg");
   });
 });
 

@@ -9,10 +9,15 @@ export interface SlideTransition {
   direction?: Direction;
 }
 
+export type ImagePosition = "bottom-left" | "bottom-right" | "center";
+export type ImageSize = "sm" | "md" | "lg";
+
 export interface ImageConfig {
   src: string;
   alt?: string;
   caption?: string;
+  position?: ImagePosition;
+   size?: ImageSize;
 }
 
 export interface BaseSlide {

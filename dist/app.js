@@ -237,8 +237,14 @@ class SlideRenderer {
         el.append(wrapper);
     }
     createImageWrapper(imageConfig = {}, baseTestId, { overlay = true, hidden = true } = {}) {
+        const position = imageConfig.position === "bottom-right" || imageConfig.position === "center"
+            ? imageConfig.position
+            : "bottom-left";
+        const size = imageConfig.size === "sm" || imageConfig.size === "lg" ? imageConfig.size : "md";
+        const positionClass = overlay ? ` image-pos-${position}` : "";
+        const sizeClass = overlay ? ` image-size-${size}` : "";
         const wrapper = document.createElement("div");
-        wrapper.className = `image-wrapper${overlay ? " image-overlay" : ""} slide-content`;
+        wrapper.className = `image-wrapper${overlay ? " image-overlay" : ""}${positionClass}${sizeClass} slide-content`;
         if (hidden) {
             wrapper.classList.add("is-hidden");
             wrapper.setAttribute("aria-hidden", "true");
@@ -246,6 +252,8 @@ class SlideRenderer {
         if (baseTestId) {
             wrapper.dataset.testid = `${baseTestId}-image-wrapper`;
         }
+        wrapper.dataset.imagePosition = position;
+        wrapper.dataset.imageSize = size;
         const src = imageConfig.src;
         if (!src)
             return wrapper;

@@ -11,6 +11,8 @@ const intro: TextSlide = createIntroSlide({
   image: {
     src: "assets/images/default/default01.png",
     alt: "Browser Planks logo illustration",
+    position: "bottom-right",
+    size: "lg",
   },
 });
 

@@ -12,6 +12,7 @@ const outro: TextSlide = createOutroSlide({
   image: {
     src: "assets/images/default/default03.png",
     alt: "Presentation complete illustration",
+    position: "center",
   },
 });
 

@@ -12,6 +12,7 @@ const slide01: TextSlide = createTextSlide({
   image: {
     src: "assets/images/default/default02.png",
     alt: "Default deck startup illustration",
+    size: "sm"
   },
   transition: { type: "slide", duration: 500, easing: "ease-in-out" },
 });

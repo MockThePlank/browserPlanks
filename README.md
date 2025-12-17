@@ -29,6 +29,8 @@ A small, framework-free presentation app with animated transitions, 5 sample sli
 
 - Put your assets under `assets/images/` (e.g. `assets/images/logo.png`).
 - You can embed images in `text` and `table` slides or use the `image` type.
+- Optional: set `image.position` to `"bottom-left"` (default), `"bottom-right"`, or `"center"` to place overlay images.
+- Optional: set `image.size` to `"sm"`, `"md"` (default), or `"lg"` to scale overlay images. Left/right images scale toward the center; centered images scale downward from the middle to avoid the banner.
 
 ```js
 // Image in a text slide
@@ -42,6 +44,8 @@ export default {
     src: "assets/images/arch.png",
     alt: "Architecture block diagram",
     caption: "Example architecture overview",
+    position: "bottom-right", // "bottom-left" (default) | "bottom-right" | "center"
+    size: "lg", // "sm" | "md" (default) | "lg"
   },
   transition: { type: "fade", duration: 500 },
 };
@@ -62,7 +66,7 @@ export default {
   body: "Text content",
   table: { columns: [...], rows: [[...], ...] },
   video: { src, autoplay, controls, muted, poster },
-  image: { src, alt, caption },
+  image: { src, alt, caption, position, size },
   transition: { type: "fade"|"slide"|"zoom", duration: 500, easing: "ease-in-out" },
 };
 ```

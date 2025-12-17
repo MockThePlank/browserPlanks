@@ -445,13 +445,17 @@ class Deck {
   private queuedIndex: number | null = null;
   private revealIntervals = new Map<HTMLElement, number>();
 
-  constructor(presentation: Presentation, { stageEl, slidesRootEl, indicatorEl }: DeckElements) {
+  constructor(
+    presentation: Presentation,
+    { stageEl, slidesRootEl, indicatorEl }: DeckElements,
+    transitioner?: TransitionManager
+  ) {
     this.presentation = presentation;
     this.slides = presentation.slides;
     this.stageEl = stageEl;
     this.slidesRootEl = slidesRootEl;
     this.indicatorEl = indicatorEl;
-    this.transitioner = new TransitionManager(slidesRootEl);
+    this.transitioner = transitioner ?? new TransitionManager(slidesRootEl);
   }
 
   init(): void {
@@ -700,3 +704,5 @@ function applyTheme(theme: ThemeConfig = {}): void {
     document.head.appendChild(link);
   });
 }
+
+export { applyTheme, clamp, Deck, SlideRenderer, TransitionManager };

@@ -326,7 +326,7 @@ class TransitionManager {
     }
 }
 class Deck {
-    constructor(presentation, { stageEl, slidesRootEl, indicatorEl }) {
+    constructor(presentation, { stageEl, slidesRootEl, indicatorEl }, transitioner) {
         this.renderer = new SlideRenderer();
         this.currentIndex = -1;
         this.isRoutingFromHash = false;
@@ -338,7 +338,7 @@ class Deck {
         this.stageEl = stageEl;
         this.slidesRootEl = slidesRootEl;
         this.indicatorEl = indicatorEl;
-        this.transitioner = new TransitionManager(slidesRootEl);
+        this.transitioner = transitioner ?? new TransitionManager(slidesRootEl);
     }
     init() {
         this.bindEvents();
@@ -557,3 +557,4 @@ function applyTheme(theme = {}) {
         document.head.appendChild(link);
     });
 }
+export { applyTheme, clamp, Deck, SlideRenderer, TransitionManager };

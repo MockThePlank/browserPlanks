@@ -6,16 +6,27 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest",
+    "test:watch": "vitest watch"
   },
   "repository": {
     "type": "git",
     "url": "git@github-codebeard:MockThePlank/browserPlanks.git"
   },
-  "keywords": ["Slides", "Presentation", "HTML", "CSS", "JavaScript"],
+  "keywords": [
+    "Slides",
+    "Presentation",
+    "HTML",
+    "CSS",
+    "JavaScript"
+  ],
   "author": "CodeBeard",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "@types/jsdom": "^27.0.0",
+    "jsdom": "^27.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
   }
 }

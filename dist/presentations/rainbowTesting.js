@@ -32,7 +32,7 @@ const textSlideOverrides = [
             src: "assets/images/rainbow/rainbowUni.png",
             alt: "Rainbow Testing color coding",
             caption: "Quality zones in the Rainbow model",
-            position: "center",
+            position: "bottom-right",
             size: "lg"
         },
     },

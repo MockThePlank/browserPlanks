@@ -9,7 +9,7 @@ const outro = createOutroSlide({
     image: {
         src: "assets/images/default/default03.png",
         alt: "Presentation complete illustration",
-        position: "center",
+        position: "bottom-right",
     },
 });
 export default outro;

@@ -11,7 +11,7 @@ const slide03: TableSlide = createTableSlide({
       ["Slide templates (text/table/video/image)", "slides/templates.ts", "ready"],
       ["Deck routing via ?deck=<id>", "app.ts / presentations", "ready"],
       ["Themes per presentation", "styles/banner.css + theme class", "ready"],
-      ["Data-testid hooks", "app.ts renderers", "ready"],
+      ["Add your own slides", "slides/ + presentations/index.ts", "ready"]
     ],
   },
 });
